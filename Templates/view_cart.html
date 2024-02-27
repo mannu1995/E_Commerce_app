@@ -1,0 +1,53 @@
+<!-- view_cart.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Cart</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5 mb-4">Your Cart</h1>
+        <div id="cart-items">
+            <!-- Cart items will be displayed here -->
+            {% for order_item in order.order_items.all %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ order_item.product.name }}</h5>
+                    <p class="card-text">Price: ${{ order_item.product.price }}</p>
+                    <p class="card-text">Quantity: {{ order_item.quantity }}</p>
+                    <button class="btn btn-primary btn-sm mr-2" onclick="removeFromCart({{ order_item.id }})">Remove</button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <p>Total: ${{ order.total }}</p>
+    </div>
+
+    <!-- Bootstrap JS (optional, if needed) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- JavaScript code for removing items from cart -->
+    <script>
+        function removeFromCart(orderItemId) {
+            // Send AJAX request to remove item from cart
+            $.ajax({
+                url: '/remove_from_cart/' + orderItemId + '/',
+                type: 'GET',
+                success: function(data) {
+                    // Reload page after successful removal
+                    window.location.reload();
+                },
+                error: function(xhr, status, error) {
+                    // Handle error
+                    console.error(error);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
